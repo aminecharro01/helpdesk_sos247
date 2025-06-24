@@ -1,0 +1,75 @@
+/* Auth Pages Styles */
+.auth-page {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding-top: 80px;
+}
+
+.auth-form-wrapper {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.auth-form {
+    margin-top: 1.5rem;
+}
+
+.auth-form .form-label {
+    font-weight: 500;
+    color: #344767;
+    margin-bottom: 0.5rem;
+}
+
+.auth-form .input-group-text {
+    background-color: #f8f9fa;
+    border-color: #e9ecef;
+}
+
+.auth-form .form-control {
+    border-color: #e9ecef;
+    padding: 0.75rem 1rem;
+}
+
+.auth-form .form-control:focus {
+    border-color: #5e72e4;
+    box-shadow: 0 0 0 0.2rem rgba(94, 114, 228, 0.25);
+}
+
+.auth-form .btn-primary {
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    background-color: #5e72e4;
+    border-color: #5e72e4;
+}
+
+.auth-form .btn-primary:hover {
+    background-color: #324cdd;
+    border-color: #324cdd;
+}
+
+.auth-form .form-check-input:checked {
+    background-color: #5e72e4;
+    border-color: #5e72e4;
+}
+
+.auth-form .text-decoration-none {
+    color: #5e72e4;
+}
+
+.auth-form .text-decoration-none:hover {
+    color: #324cdd;
+}
+
+.auth-form .invalid-feedback {
+    font-size: 0.875rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .auth-form-wrapper {
+        padding: 1.5rem;
+    }
+} 
