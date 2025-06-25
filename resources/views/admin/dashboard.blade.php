@@ -14,14 +14,15 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="card h-100 border-top border-top-4 border-primary">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Total Users</h3>
+                            <h3 class="text-muted mb-2">Utilisateurs totaux</h3>
+                            <p class="h2 fw-bold text-primary mb-0">{{ $totalUsers }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <div class="card h-100 border-top border-top-4 border-info">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Total Tickets</h3>
+                            <h3 class="text-muted mb-2">Tickets totaux</h3>
                             <p class="h2 fw-bold text-info mb-0">{{ $totalTickets }}</p>
                         </div>
                     </div>
@@ -29,7 +30,7 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="card h-100 border-top border-top-4 border-success">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Active Agents</h3>
+                            <h3 class="text-muted mb-2">Agents actifs</h3>
                             <p class="h2 fw-bold text-success mb-0">{{ $activeAgents }}</p>
                         </div>
                     </div>
@@ -37,7 +38,7 @@
                 <div class="col-sm-6 col-lg-3">
                     <div class="card h-100 border-top border-top-4 border-warning">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Active Clients</h3>
+                            <h3 class="text-muted mb-2">Clients actifs</h3>
                             <p class="h2 fw-bold text-warning mb-0">{{ $activeClients }}</p>
                         </div>
                     </div>
@@ -48,7 +49,7 @@
             <div class="card mb-4" data-aos="fade-up" data-aos-delay="200">
                 <div class="card-header bg-white">
                     <h3 class="h5 mb-0 text-primary">
-                        <i class="bi bi-pie-chart me-2"></i> User Distribution
+                        <i class="bi bi-pie-chart me-2"></i> Répartition des utilisateurs
                     </h3>
                 </div>
                 <div class="card-body">
@@ -179,7 +180,7 @@
                 new window.Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['Admins', 'Agents', 'Clients'],
+                        labels: ['Administrateurs', 'Agents', 'Clients'],
                         datasets: [{
                             data: [window.adminCount, window.agentCount, window.clientCount],
                             backgroundColor: ['#dc3545', '#0dcaf0', '#198754'],

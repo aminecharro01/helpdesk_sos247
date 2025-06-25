@@ -15,9 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Seeder des utilisateurs par défaut (admin, agent, superviseur, client)
+        $this->call(DefaultUsersSeeder::class);
+
+        // Ajout du seeder des rôles et permissions
+        $this->call(RolePermissionSeeder::class);
     }
 }

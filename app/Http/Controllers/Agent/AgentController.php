@@ -17,14 +17,23 @@ class AgentController extends Controller
 {
     public function index(Request $request)
 {
-    $tickets = Ticket::where('agent_id', Auth::id())
-        ->when($request->has('status'), function ($query) use ($request) {
-            return $query->where('status', $request->status);
+    $ticketsQuery = Ticket::where('agent_id', Auth::id());
+        // Statistiques de tickets (avant filtrage)
+    $total      = $ticketsQuery->count();
+    $opened     = (clone $ticketsQuery)->where('status', 'ouvert')->count();
+    $inProgress = (clone $ticketsQuery)->where('status', 'en_cours')->count();
+    $resolved   = (clone $ticketsQuery)->where('status', 'resolu')->count();
+    $closed    = (clone $ticketsQuery)->where('status', 'ferme')->count();
+
+    // Liste paginée avec filtres recherche (status, priorité)
+    $tickets = (clone $ticketsQuery)
+        ->when($request->filled('status'), function ($query) use ($request) {
+            $query->where('status', $request->status);
         })
-        ->when($request->has('priority'), function ($query) use ($request) {
-            return $query->where('priority', $request->priority);
+        ->when($request->filled('priority'), function ($query) use ($request) {
+            $query->where('priority', $request->priority);
         })
-        ->orderBy('created_at', 'desc')
+        ->orderByDesc('created_at')
         ->paginate(10);
 
     // Notifications non lues pour l'utilisateur connecté
@@ -53,6 +62,9 @@ class AgentController extends Controller
         ->take(5)
         ->get();
 
+    // Derniers tickets (pour tableau)
+    $latestTickets = (clone $ticketsQuery)->with('client')->latest()->take(5)->get();
+
     // Historique des modifications de statut récentes
     $recentStatusChanges = Ticket::where('agent_id', Auth::id())
     ->whereNotNull('status')
@@ -66,9 +78,20 @@ class AgentController extends Controller
         'recentComments', 
         'todayResolvedTickets', 
         'upcomingDeadlines',
-        'recentStatusChanges'
+        'recentStatusChanges',
+        'total', 'opened', 'inProgress', 'resolved', 'closed', 'latestTickets'
     ));
 }
+
+    public function ticketsIndex(Request $request)
+    {
+        $tickets = Ticket::where('agent_id', Auth::id())
+            ->with('client')
+            ->orderByDesc('created_at')
+            ->paginate(15);
+
+        return view('agent.tickets.index', compact('tickets'));
+    }
 
     public function show($id)
     {

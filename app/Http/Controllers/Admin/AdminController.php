@@ -12,16 +12,47 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $tickets = Ticket::all()->sortByDesc('created_at');
-        $agents = User::where('role', 'agent')->get();
+        // Statistiques principales
+        $totalUsers     = User::count();
+        $totalTickets   = Ticket::count();
+        $openTickets    = Ticket::where('status', 'ouvert')->count();
+        $inProgressTickets = Ticket::where('status', 'en_cours')->count();
+        $resolvedTickets   = Ticket::where('status', 'resolu')->count();
+        $closedTickets     = Ticket::where('status', 'ferme')->count();
 
-        $ticketCount = $tickets->count();
-        $openTickets = $tickets->where('status', 'ouvert')->count();
-        $inProgressTickets = $tickets->where('status', 'en_cours')->count();
-        $resolvedTickets = $tickets->where('status', 'resolu')->count();
-        $closedTickets = $tickets->where('status', 'ferme')->count();
+        $adminCount    = User::where('role', 'admin')->count();
+        $agentCount    = User::where('role', 'agent')->count();
+        $clientCount   = User::where('role', 'client')->count();
 
-        return view('admin.dashboard', compact('tickets', 'agents', 'ticketCount', 'openTickets', 'inProgressTickets', 'resolvedTickets', 'closedTickets'));
+        // Variables pour les cartes de statistiques (alias pour la clarté de la vue)
+        $activeAgents  = $agentCount;
+        $activeClients = $clientCount;
+
+        // Listes pour les tableaux
+        $latestUsers   = User::latest()->take(5)->get();
+        $latestTickets = Ticket::with('client')->latest()->take(5)->get();
+
+        return view('admin.dashboard', compact(
+            'totalTickets',
+            'openTickets',
+            'inProgressTickets',
+            'resolvedTickets',
+            'closedTickets',
+            'totalUsers',
+            'adminCount',
+            'agentCount',
+            'clientCount',
+            'activeAgents',
+            'activeClients',
+            'latestUsers',
+            'latestTickets'
+        ));
+    }
+
+    public function ticketsIndex()
+    {
+        $tickets = Ticket::with(['client', 'agent'])->latest()->paginate(15);
+        return view('admin.tickets.index', compact('tickets'));
     }
 
     public function assignAgent(Request $request, Ticket $ticket)
@@ -92,6 +123,11 @@ class AdminController extends Controller
         $ticket->delete();
 
         return redirect()->route('admin.dashboard')->with('success', 'Ticket supprimé avec succès.');
+    }
+
+    public function showUser(User $user)
+    {
+        return view('admin.users.show', compact('user'));
     }
 
     public function usersIndex()

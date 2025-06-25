@@ -1,6 +1,6 @@
 <nav id="navbar" class="navbar">
     <ul>
-        @if(auth()->user()->role === 'admin')
+        @if(Auth::user()->role === 'admin')
             <li><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-speedometer2 me-2"></i>Dashboard
             </a></li>
@@ -18,15 +18,17 @@
                     </a></li>
                 </ul>
             </li>
-        @endif
-
-        @if(auth()->user()->role === 'agent')
+        @elseif(Auth::user()->role === 'superviseur')
+            <li class="nav-item"><a class="nav-link" href="{{ route('superviseur.dashboard') }}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('superviseur.tickets.index') }}">Tickets</a></li>
+        @elseif(Auth::user()->role === 'agent')
             <li><a href="{{ route('agent.dashboard') }}" class="{{ request()->routeIs('agent.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-speedometer2 me-2"></i>Dashboard
             </a></li>
             <li><a href="{{ route('agent.tickets.index') }}" class="{{ request()->routeIs('agent.tickets.*') ? 'active' : '' }}">
                 <i class="bi bi-ticket-detailed me-2"></i>Tickets
             </a></li>
+        @elseif(Auth::user()->role === 'client')
         @endif
 
         @if(auth()->user()->role === 'client')
