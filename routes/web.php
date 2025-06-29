@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\User\TicketsController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Supervisor\SupervisorController;
 use Illuminate\Support\Facades\Route;
 
 // Redirection générique après authentification selon le rôle
@@ -64,7 +65,6 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     // Routes pour la gestion des tickets
     Route::get('/tickets', [AdminController::class, 'ticketsIndex'])->name('admin.tickets.index');
-
     Route::post('/tickets/{ticket}/assign-agent', [AdminController::class, 'assignAgent'])->name('admin.tickets.assignAgent');
     Route::get('/tickets/{ticket}', [AdminController::class, 'show'])->name('admin.tickets.show');
     Route::get('/tickets/{ticket}/edit', [AdminController::class, 'edit'])->name('admin.tickets.edit');
@@ -83,9 +83,12 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
 
 // Superviseur routes
-Route::prefix('superviseur')->middleware(['auth','role:superviseur'])->group(function(){
-    Route::get('/dashboard',[\App\Http\Controllers\Supervisor\SupervisorController::class,'index'])->name('superviseur.dashboard');
-    Route::get('/tickets',[\App\Http\Controllers\Supervisor\SupervisorController::class,'ticketsIndex'])->name('superviseur.tickets.index');
+Route::prefix('superviseur')->middleware(['auth', 'role:superviseur'])->group(function () {
+    Route::get('/dashboard', [SupervisorController::class, 'index'])->name('superviseur.dashboard');
+    Route::get('/tickets', [SupervisorController::class, 'ticketsIndex'])->name('superviseur.tickets.index');
+    Route::post('/tickets/{ticket}/assign', [SupervisorController::class, 'assignTicket'])->name('superviseur.tickets.assign');
+    Route::get('/tickets/export/csv', [SupervisorController::class, 'exportTicketsCsv'])->name('superviseur.tickets.export.csv');
+    Route::get('/tickets/export/pdf', [SupervisorController::class, 'exportTicketsPdf'])->name('superviseur.tickets.export.pdf');
 });
 
 // Agent routes

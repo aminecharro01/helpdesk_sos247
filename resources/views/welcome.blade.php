@@ -31,37 +31,50 @@
 </head>
 
 <body class="index-page">
-    <header id="header" class="header d-flex align-items-center fixed-top">
-        <div class="container position-relative d-flex align-items-center justify-content-between">
-            <a href="{{ route('welcome') }}" class="logo d-flex align-items-center me-auto me-xl-0">
-                <h1 class="sitename">{{ config('app.name', 'Laravel') }}</h1><span></span>
-            </a>
-
-            <nav id="navmenu" class="navmenu">
-                <ul>
-                    <li><a href="#hero" class="active">Accueil</a></li>
-                    <li><a href="#features">Fonctionnalités</a></li>
-                    <li><a href="#how-it-works">Comment ça marche</a></li>
-                    <li><a href="#pricing">Tarifs</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-            </nav>
-
-            @if (Route::has('login'))
-                <div class="d-flex align-items-center">
-                    @auth
-                        <a href="{{ route('client.dashboard') }}" class="btn-getstarted">Tableau de bord</a>
-                    @else
-                        <a href="{{ route('login') }}" class="btn-getstarted me-2">Connexion</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="btn btn-outline-primary">S'inscrire</a>
-                        @endif
-                    @endauth
+    <header id="header" class="header fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="{{ route('welcome') }}">
+                    <span class="fw-bold text-primary">{{ config('app.name', 'SOS247') }}</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" href="#hero">Accueil</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#features">Fonctionnalités</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#how-it-works">Comment ça marche</a></li>
+                    </ul>
+                    @if (Route::has('login'))
+                        <div class="d-flex align-items-center ms-lg-3">
+                            @auth
+                                @php
+                                    $role = auth()->user()->role;
+                                    $dashboardRoute = match($role) {
+                                        'admin' => route('admin.dashboard'),
+                                        'superviseur' => route('superviseur.dashboard'),
+                                        'agent' => route('agent.dashboard'),
+                                        'client' => route('client.dashboard'),
+                                        default => '#'
+                                    };
+                                @endphp
+                                <a href="{{ $dashboardRoute }}" class="btn btn-primary">Tableau de bord</a>
+                            @else
+                                <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">Connexion</a>
+                                @if (Route::has('register'))
+                                    <a href="{{ route('register') }}" class="btn btn-primary">S'inscrire</a>
+                                @endif
+                            @endauth
+                        </div>
+                    @endif
                 </div>
-            @endif
-        </div>
+            </div>
+        </nav>
     </header>
+
+    <!-- Ajout d'un espace sous la navbar fixe -->
+    <div style="padding-top: 90px;"></div>
 
     <main class="main">
         <!-- Hero Section -->
@@ -93,7 +106,7 @@
 
                     <div class="col-lg-6">
                         <div class="hero-image">
-                            <img src="{{ asset('assets/img/illustration/illustration-16.webp') }}" alt="Système d'Assistance" class="img-fluid" loading="lazy">
+                            <img src="{{ asset('assets/img/illustration/illustration-16.png') }}" alt="Système d'Assistance" class="img-fluid" loading="lazy">
                         </div>
                     </div>
                 </div>

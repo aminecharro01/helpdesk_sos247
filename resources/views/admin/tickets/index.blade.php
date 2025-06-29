@@ -42,20 +42,35 @@
                                             <td>{{ $ticket->client->name ?? 'N/A' }}</td>
                                             <td>{{ $ticket->agent->name ?? 'Non assigné' }}</td>
                                             <td>
-                                                <span class="badge bg-{{ match($ticket->status) { 'ouvert' => 'success', 'en_cours' => 'info', 'resolu' => 'primary', 'ferme' => 'secondary' } }}">
-                                                    {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}
-                                                </span>
+                                                <span class="badge bg-{{ match($ticket->status) {
+    'ouvert' => 'success',
+    'en_cours' => 'info',
+    'resolu' => 'primary',
+    'ferme' => 'secondary',
+    default => 'secondary'
+} }}">
+    {{ ucfirst(str_replace('_', ' ', $ticket->status ?? 'Inconnu')) }}
+</span>
                                             </td>
                                             <td>
-                                                <span class="badge bg-{{ match($ticket->priority) { 'basse' => 'secondary', 'moyenne' => 'warning', 'haute' => 'danger' } }}">
-                                                    {{ ucfirst($ticket->priority) }}
-                                                </span>
+                                                <span class="badge bg-{{ match($ticket->priority) {
+    'basse' => 'secondary',
+    'moyenne' => 'warning',
+    'haute' => 'danger',
+    default => 'secondary'
+} }}">
+    {{ ucfirst($ticket->priority ?? 'Inconnue') }}
+</span>
                                             </td>
                                             <td>{{ $ticket->created_at->format('d/m/Y') }}</td>
-                                            <td>
-                                                <a href="{{ route('admin.tickets.show', $ticket->id) }}" class="btn btn-sm btn-outline-primary">Voir</a>
-                                                <a href="{{ route('admin.tickets.edit', $ticket->id) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
-                                            </td>
+                                            <td class="d-flex gap-2">
+    <a href="{{ route('admin.tickets.show', $ticket->id) }}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-eye me-1"></i> Voir
+    </a>
+    <a href="{{ route('admin.tickets.edit', $ticket->id) }}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-pencil-square me-1"></i> Modifier
+    </a>
+</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

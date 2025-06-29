@@ -1,69 +1,78 @@
 <x-guest-layout>
-    <div class="text-center mb-4" data-aos="fade-up">
-        <h1 class="h2 mb-2">Welcome Back</h1>
-        <p class="text-muted">Sign in to access your helpdesk account</p>
-    </div>
-
-    <!-- Session Status -->
-    <x-auth-session-status class="alert alert-info mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('login') }}" class="auth-form" data-aos="fade-up" data-aos-delay="100">
-        @csrf
-
-        <!-- Email Address -->
-        <div class="form-group mb-3">
-            <label for="email" class="form-label">Email Address</label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="Enter your email">
-                @error('email')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/registrations/registration-3/assets/css/registration-3.css">
+    <section class="p-3 p-md-4 p-xl-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 bg-primary">
+                    <div class="d-flex flex-column justify-content-between h-100 p-3 p-md-4 p-xl-5">
+                        <h3 class="m-0"></h3>
+                        <img class="img-fluid rounded mx-auto my-4" loading="lazy" src="assets/img/illustration/illustration-16.png" width="245" height="80" alt="Login Illustration">
+                        <p class="mb-0 text-light"> </p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 bsb-tpl-bg-lotion">
+                    <div class="p-3 p-md-4 p-xl-5">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-5">
+                                    <h2 class="h3">Login</h2>
+                                    <h3 class="fs-6 fw-normal text-secondary m-0">Enter your credentials to access your account</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Session Status -->
+                        @if (session('status'))
+                            <div class="alert alert-info mb-4">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                        <form method="POST" action="{{ route('login') }}">
+                            @csrf
+                            <div class="row gy-3 gy-md-4 overflow-hidden">
+                                <div class="col-12">
+                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email" placeholder="name@example.com" value="{{ old('email') }}" required autofocus autocomplete="username">
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-12">
+                                    <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" required autocomplete="current-password">
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-12 d-flex justify-content-between align-items-center">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="remember_me" name="remember">
+                                        <label class="form-check-label" for="remember_me">Remember me</label>
+                                    </div>
+                                    @if (Route::has('password.request'))
+                                        <a href="{{ route('password.request') }}" class="text-decoration-none">
+                                            Forgot password?
+                                        </a>
+                                    @endif
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button class="btn bsb-btn-xl btn-primary" type="submit">Sign in</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-12">
+                                <hr class="mt-5 mb-4 border-secondary-subtle">
+                                @if (Route::has('register'))
+                                    <p class="m-0 text-secondary text-end">Don't have an account? <a href="{{ route('register') }}" class="link-primary text-decoration-none">Sign up</a></p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Password -->
-        <div class="form-group mb-3">
-            <label for="password" class="form-label">Password</label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
-                @error('password')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
-
-        <!-- Remember Me -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="remember_me" name="remember">
-                <label class="form-check-label" for="remember_me">Remember me</label>
-            </div>
-
-            @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="text-decoration-none">
-                    Forgot password?
-                </a>
-            @endif
-        </div>
-
-        <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary">
-                Sign In
-            </button>
-
-            @if (Route::has('register'))
-                <p class="text-center mt-3 mb-0">
-                    Don't have an account?
-                    <a href="{{ route('register') }}" class="text-decoration-none">Sign up</a>
-                </p>
-            @endif
-        </div>
-    </form>
-
-    <!-- Petit texte motivant -->
-    <div class="mt-8 text-center animate__animated animate__fadeInUp animate__delay-2s">
-        <p class="text-gray-500 text-sm">Besoin d'aide ? <span class="text-indigo-600 font-medium">Contactez notre support technique à tout moment.</span></p>
-    </div>
+    </section>
 </x-guest-layout>

@@ -12,43 +12,43 @@
             <!-- Statistics -->
             <div class="row g-4 mb-4" data-aos="fade-up" data-aos-delay="100">
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card h-100 border-top border-top-4 border-primary">
+                    <div class="card h-100 bg-primary text-white">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Total</h3>
-                            <p class="h2 fw-bold text-primary mb-0">{{ $total }}</p>
+                            <h3 class="fw-bold mb-2 text-white">Total</h3>
+                            <p class="display-6 mb-0">{{ $total }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card h-100 border-top border-top-4 border-info">
+                    <div class="card h-100 bg-info text-white">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Open</h3>
-                            <p class="h2 fw-bold text-info mb-0">{{ $opened }}</p>
+                            <h3 class="fw-bold mb-2 text-white">Ouverts</h3>
+                            <p class="display-6 mb-0">{{ $opened }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card h-100 border-top border-top-4 border-success">
+                    <div class="card h-100 bg-success text-white">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Resolved</h3>
-                            <p class="h2 fw-bold text-success mb-0">{{ $resolved }}</p>
+                            <h3 class="fw-bold mb-2 text-white">Résolus</h3>
+                            <p class="display-6 mb-0">{{ $resolved }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card h-100 border-top border-top-4 border-warning">
+                    <div class="card h-100 bg-warning text-white">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">En cours</h3>
-                            <p class="h2 fw-bold text-warning mb-0">{{ $inProgress }}</p>
+                            <h3 class="fw-bold mb-2 text-white">En cours</h3>
+                            <p class="display-6 mb-0">{{ $inProgress }}</p>
                         </div>
                     </div>
                 </div>
                 <!-- Carte Tickets fermés -->
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card h-100 border-top border-top-4 border-danger">
+                    <div class="card h-100 bg-danger text-white">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Fermés</h3>
-                            <p class="h2 fw-bold text-danger mb-0">{{ $closed }}</p>
+                            <h3 class="fw-bold mb-2 text-white">Fermés</h3>
+                            <p class="display-6 mb-0">{{ $closed }}</p>
                         </div>
                     </div>
                 </div>

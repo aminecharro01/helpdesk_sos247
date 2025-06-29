@@ -40,14 +40,25 @@
                                             <td>{{ Str::limit($ticket->title, 30) }}</td>
                                             <td>{{ $ticket->client->name ?? 'N/A' }}</td>
                                             <td>
-                                                <span class="badge bg-{{ match($ticket->status) { 'ouvert' => 'success', 'en_cours' => 'info', 'resolu' => 'primary', 'ferme' => 'secondary' } }}">
-                                                    {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}
-                                                </span>
+                                                <span class="badge bg-{{ match($ticket->status) {
+    'ouvert' => 'success',
+    'en_cours' => 'info',
+    'resolu' => 'primary',
+    'ferme' => 'secondary',
+    default => 'secondary'
+} }}">
+    {{ ucfirst(str_replace('_', ' ', $ticket->status ?? 'Inconnu')) }}
+</span>
                                             </td>
                                             <td>
-                                                <span class="badge bg-{{ match($ticket->priority) { 'basse' => 'secondary', 'moyenne' => 'warning', 'haute' => 'danger' } }}">
-                                                    {{ ucfirst($ticket->priority) }}
-                                                </span>
+                                                <span class="badge bg-{{ match($ticket->priority) {
+    'basse' => 'secondary',
+    'moyenne' => 'warning',
+    'haute' => 'danger',
+    default => 'secondary'
+} }}">
+    {{ ucfirst($ticket->priority ?? 'Inconnue') }}
+</span>
                                             </td>
                                             <td>{{ $ticket->created_at->format('d/m/Y') }}</td>
                                             <td>

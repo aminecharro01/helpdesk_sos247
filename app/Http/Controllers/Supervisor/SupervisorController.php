@@ -6,50 +6,232 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class SupervisorController extends Controller
 {
     /**
-     * Tableau de bord superviseur.
+     * Display the supervisor's dashboard.
+     *
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        // Statistiques tickets
-        $totalTickets     = Ticket::count();
-        $openTickets      = Ticket::where('status', 'ouvert')->count();
-        $inProgressTickets= Ticket::where('status', 'en_cours')->count();
-        $resolvedTickets  = Ticket::where('status', 'resolu')->count();
-        $closedTickets    = Ticket::where('status', 'ferme')->count();
+        // Card Stats
+        $totalTickets = Ticket::count();
+        $openTickets = Ticket::where('status', 'ouvert')->count();
+        $closedTickets = Ticket::where('status', 'fermé')->count();
+        $agentCount = User::where('role', 'agent')->count();
+        $clientCount = User::where('role', 'client')->count();
 
-        // Comptes utilisateurs
-        $agentCount   = User::where('role', 'agent')->count();
-        $clientCount  = User::where('role', 'client')->count();
+        // Latest Tickets
+        $latestTickets = Ticket::with(['client', 'agent'])->latest()->take(5)->get();
 
-        // Derniers tickets
-        $latestTickets = Ticket::with(['client','agent'])->latest()->take(5)->get();
+        // SLA: Average Resolution Time
+        $closedTicketsForSla = Ticket::where('status', 'fermé')->whereNotNull('updated_at')->get();
+        $resolvedTicketsCount = $closedTicketsForSla->count();
+        $averageResolutionTimeInSeconds = 0;
+        if ($resolvedTicketsCount > 0) {
+            $totalResolutionTime = $closedTicketsForSla->sum(function ($ticket) {
+                return Carbon::parse($ticket->updated_at)->diffInSeconds(Carbon::parse($ticket->created_at));
+            });
+            $averageResolutionTimeInSeconds = $totalResolutionTime / $resolvedTicketsCount;
+        }
+
+        // Chart Data: Tickets created vs closed (last 7 days)
+        $days = collect([]);
+        for ($i = 6; $i >= 0; $i--) {
+            $days->put(now()->subDays($i)->format('Y-m-d'), now()->subDays($i)->format('M d'));
+        }
+        $createdTicketsData = Ticket::selectRaw('DATE(created_at) as date, COUNT(*) as count')->where('created_at', '>=', now()->subDays(7))->groupBy('date')->pluck('count', 'date');
+        $closedTicketsData = Ticket::selectRaw('DATE(updated_at) as date, COUNT(*) as count')->where('status', 'fermé')->where('updated_at', '>=', now()->subDays(7))->groupBy('date')->pluck('count', 'date');
+        $chartLabels = $days->values()->toJson();
+        $createdTicketsChart = $days->keys()->map(fn ($date) => $createdTicketsData[$date] ?? 0)->values()->toJson();
+        $closedTicketsChart = $days->keys()->map(fn ($date) => $closedTicketsData[$date] ?? 0)->values()->toJson();
+
+        // Pie Chart: Tickets by Priority
+        $priorityData = Ticket::select('priority', \DB::raw('count(*) as total'))
+            ->groupBy('priority')
+            ->pluck('total', 'priority');
+        $priorityLabels = $priorityData->keys()->map(fn($p) => ucfirst($p));
+        $priorityValues = $priorityData->values();
+
+        // Pie Chart: Tickets by Status
+        $statusData = Ticket::select('status', \DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status');
+        $statusLabels = $statusData->keys()->map(fn($s) => ucfirst($s));
+        $statusValues = $statusData->values();
+
+        // Agent Workload
+        $agentWorkload = User::where('role', 'agent')
+            ->withCount(['assignedTickets' => function ($query) {
+                $query->where('status', 'ouvert');
+            }])
+            ->get();
 
         return view('supervisor.dashboard', compact(
             'totalTickets',
             'openTickets',
-            'inProgressTickets',
-            'resolvedTickets',
             'closedTickets',
             'agentCount',
             'clientCount',
-            'latestTickets'
+            'latestTickets',
+            'averageResolutionTimeInSeconds',
+            'chartLabels',
+            'createdTicketsChart',
+            'closedTicketsChart',
+            'priorityLabels',
+            'priorityValues',
+            'statusLabels',
+            'statusValues',
+            'agentWorkload'
         ));
     }
 
     /**
-     * Liste complète des tickets pour supervision.
+     * Display a listing of the tickets.
+     *
+     * @return \Illuminate\View\View
      */
     public function ticketsIndex(Request $request)
     {
-        $tickets = Ticket::with(['client','agent'])
-            ->when($request->filled('status'), fn($q)=>$q->where('status',$request->status))
-            ->orderByDesc('created_at')
-            ->paginate(20);
+        $query = Ticket::with(['client', 'agent']);
 
-        return view('supervisor.tickets.index', compact('tickets'));
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function($sub) use ($q) {
+                $sub->where('title', 'like', "%$q%")
+                    ->orWhereHas('client', function($c) use ($q) {
+                        $c->where('name', 'like', "%$q%");
+                    });
+            });
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
+        if ($request->filled('agent_id')) {
+            $query->where('agent_id', $request->agent_id);
+        }
+        if ($request->filled('created_from')) {
+            $query->whereDate('created_at', '>=', $request->created_from);
+        }
+        if ($request->filled('created_to')) {
+            $query->whereDate('created_at', '<=', $request->created_to);
+        }
+
+        $tickets = $query->latest()->paginate(10)->appends($request->all());
+        $agents = User::where('role', 'agent')->get();
+        return view('supervisor.tickets.index', compact('tickets', 'agents'));
+    }
+
+    /**
+     * Export filtered tickets as PDF
+     */
+    public function exportTicketsPdf(Request $request)
+    {
+        $query = Ticket::with(['client', 'agent']);
+
+        if ($request->filled('q')) {
+            $q = $request->q;
+            $query->where(function($sub) use ($q) {
+                $sub->where('title', 'like', "%$q%")
+                    ->orWhereHas('client', function($c) use ($q) {
+                        $c->where('name', 'like', "%$q%");
+                    });
+            });
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
+        if ($request->filled('agent_id')) {
+            $query->where('agent_id', $request->agent_id);
+        }
+        if ($request->filled('created_from')) {
+            $query->whereDate('created_at', '>=', $request->created_from);
+        }
+        if ($request->filled('created_to')) {
+            $query->whereDate('created_at', '<=', $request->created_to);
+        }
+
+        $tickets = $query->latest()->get();
+
+        $pdf = \PDF::loadView('supervisor.tickets.pdf', compact('tickets'));
+        return $pdf->download('tickets-filtrés-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Assign a ticket to an agent.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Ticket  $ticket
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function assignTicket(Request $request, Ticket $ticket)
+    {
+        $request->validate([
+            'agent_id' => 'required|exists:users,id',
+        ]);
+
+        $agent = User::find($request->agent_id);
+
+        if (!$agent || $agent->role !== 'agent') {
+            return back()->with('error', 'L\'utilisateur sélectionné n\'est pas un agent valide.');
+        }
+
+        $ticket->agent_id = $agent->id;
+        $ticket->save();
+
+        return back()->with('success', 'Ticket assigné avec succès à ' . $agent->name);
+    }
+
+    /**
+     * Export tickets to a CSV file.
+     *
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function exportTicketsCsv()
+    {
+        $tickets = Ticket::with(['client', 'agent'])->get();
+
+        $fileName = 'tickets-' . now()->format('Y-m-d') . '.csv';
+
+        $headers = [
+            'Content-type'        => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma'              => 'no-cache',
+            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires'             => '0'
+        ];
+
+        $columns = ['ID', 'Titre', 'Client', 'Agent Assigné', 'Priorité', 'Statut', 'Créé le', 'Mis à jour le'];
+
+        $callback = function() use($tickets, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($tickets as $ticket) {
+                $row['ID']                = $ticket->id;
+                $row['Titre']             = $ticket->title;
+                $row['Client']            = $ticket->client->name;
+                $row['Agent Assigné']     = $ticket->agent ? $ticket->agent->name : 'Non assigné';
+                $row['Priorité']          = ucfirst($ticket->priority);
+                $row['Statut']            = ucfirst($ticket->status);
+                $row['Créé le']           = $ticket->created_at->format('d/m/Y H:i');
+                $row['Mis à jour le']     = $ticket->updated_at->format('d/m/Y H:i');
+
+                fputcsv($file, [$row['ID'], $row['Titre'], $row['Client'], $row['Agent Assigné'], $row['Priorité'], $row['Statut'], $row['Créé le'], $row['Mis à jour le']]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

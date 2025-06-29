@@ -1,18 +1,19 @@
 <!-- resources/views/admin/tickets/partials/comments.blade.php -->
-<div>
-    <h4 class="font-medium">Commentaires :</h4>
-    <ul class="space-y-4">
+<div class="mt-5">
+    <h4 class="fw-medium mb-4">Commentaires :</h4>
+    <ul class="list-unstyled">
         @foreach ($ticket->comments as $comment)
-            <li class="flex items-start bg-gray-50 border border-gray-200 rounded-xl p-4">
-                <div class="flex-shrink-0 w-10 h-10 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center font-bold text-lg">
+            <li class="d-flex align-items-start bg-light border border-secondary-subtle rounded p-3 mb-3">
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold me-3" 
+                     style="width: 40px; height: 40px; font-size: 1rem;">
                     {{ strtoupper(substr($comment->user->name, 0, 1)) }}
                 </div>
-                <div class="ml-4 w-full">
-                    <div class="flex justify-between items-center">
-                        <span class="font-semibold text-gray-800">{{ $comment->user->name }}</span>
-                        <span class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                <div class="w-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold text-dark">{{ $comment->user->name }}</span>
+                        <span class="text-muted small">{{ $comment->created_at->diffForHumans() }}</span>
                     </div>
-                    <p class="mt-2 text-gray-700 leading-relaxed">
+                    <p class="mt-2 mb-0 text-body">
                         {{ $comment->content }}
                     </p>
                 </div>

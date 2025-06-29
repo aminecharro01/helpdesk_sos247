@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -49,5 +50,21 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the tickets created by the user (as a client).
+     */
+    public function createdTickets()
+    {
+        return $this->hasMany(Ticket::class, 'client_id');
+    }
+
+    /**
+     * Get the tickets assigned to the user (as an agent).
+     */
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'agent_id');
     }
 }

@@ -1,104 +1,148 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
-                {{ __('Mes Tickets') }}
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h3 mb-0 text-primary">
+                <i class="bi bi-list-task me-2"></i>Mes Tickets
             </h2>
-            <a href="{{ route('client.tickets.create') }}" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:scale-105 transform transition">
-                + Nouveau Ticket
+            <a href="{{ route('client.tickets.create') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Nouveau Ticket
             </a>
         </div>
     </x-slot>
 
-    <div class="py-12 animate-fade-in">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl rounded-2xl p-6 space-y-6">
+    <div class="py-4">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h3 class="h5 mb-0 text-primary">Liste de vos tickets</h3>
+                </div>
+                <div class="card-body">
+                    @if (session('success'))
+                        <div class="alert alert-success d-flex align-items-center mb-4">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <div><strong>Succès :</strong> {{ session('success') }}</div>
+                        </div>
+                    @elseif (session('error'))
+                        <div class="alert alert-danger d-flex align-items-center mb-4">
+                            <i class="bi bi-x-circle-fill me-2"></i>
+                            <div><strong>Erreur :</strong> {{ session('error') }}</div>
+                        </div>
+                    @endif
 
-                @if (session('success'))
-                    <div id="success-message" class="flex items-center gap-2 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-4 animate-slide-down">
-                        <i class="fas fa-check-circle text-green-500"></i>
-                        <span><strong>Succès :</strong> {{ session('success') }}</span>
-                    </div>
-                @elseif (session('error'))
-                    <div id="error-message" class="flex items-center gap-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4 animate-slide-down">
-                        <i class="fas fa-times-circle text-red-500"></i>
-                        <span><strong>Erreur :</strong> {{ session('error') }}</span>
-                    </div>
-                @endif
+                    <!-- Filtres -->
+                    <form method="GET" action="{{ route('client.tickets.index') }}" class="row g-3 align-items-end mb-4">
+                        <div class="col-md-3">
+                            <label for="status" class="form-label">Statut</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="">Tous</option>
+                                <option value="ouvert" {{ request('status') == 'ouvert' ? 'selected' : '' }}>Ouvert</option>
+                                <option value="en_cours" {{ request('status') == 'en_cours' ? 'selected' : '' }}>En cours</option>
+                                <option value="resolu" {{ request('status') == 'resolu' ? 'selected' : '' }}>Résolu</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="priority" class="form-label">Priorité</label>
+                            <select name="priority" id="priority" class="form-select">
+                                <option value="">Toutes</option>
+                                <option value="basse" {{ request('priority') == 'basse' ? 'selected' : '' }}>Basse</option>
+                                <option value="moyenne" {{ request('priority') == 'moyenne' ? 'selected' : '' }}>Moyenne</option>
+                                <option value="haute" {{ request('priority') == 'haute' ? 'selected' : '' }}>Haute</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="category" class="form-label">Catégorie</label>
+                            <select name="category" id="category" class="form-select">
+                                <option value="" selected>Toutes</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>{{ ucfirst($cat) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-funnel me-1"></i>Filtrer
+                            </button>
+                        </div>
+                    </form>
 
-                <!-- Filtres -->
-                <form method="GET" action="{{ route('client.tickets.index') }}" class="mb-6 flex flex-wrap gap-4 items-end">
-                    <div>
-                        <label for="status" class="block text-sm font-semibold text-gray-700">Statut</label>
-                        <select name="status" id="status" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
-                            <option value="">Tous</option>
-                            <option value="ouvert" {{ request('status') == 'ouvert' ? 'selected' : '' }}>Ouvert</option>
-                            <option value="en_cours" {{ request('status') == 'en_cours' ? 'selected' : '' }}>En cours</option>
-                            <option value="resolu" {{ request('status') == 'resolu' ? 'selected' : '' }}>Résolu</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="priority" class="block text-sm font-semibold text-gray-700">Priorité</label>
-                        <select name="priority" id="priority" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
-                            <option value="">Toutes</option>
-                            <option value="basse" {{ request('priority') == 'basse' ? 'selected' : '' }}>Basse</option>
-                            <option value="moyenne" {{ request('priority') == 'moyenne' ? 'selected' : '' }}>Moyenne</option>
-                            <option value="haute" {{ request('priority') == 'haute' ? 'selected' : '' }}>Haute</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="category" class="block text-sm font-semibold text-gray-700">Catégorie</label>
-                        <select name="category" id="category" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
-                            <option value="" selected>Toutes</option>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>{{ ucfirst($cat) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:scale-105 transition">
-                            Filtrer
-                        </button>
-                    </div>
-                </form>
+                    <!-- Tableau des tickets -->
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Statut</th>
+                                    <th>Priorité</th>
+                                    <th>Catégorie</th>
+                                    <th class="text-center">Fichiers</th>
+                                    <th>Agent</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
 
-                <!-- Tableau des tickets -->
-                <div class="overflow-x-auto">
-                    <table class="min-w-full border border-gray-300 rounded-lg">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-4 py-2 text-left">Titre</th>
-                                <th class="px-4 py-2 text-left">Statut</th>
-                                <th class="px-4 py-2 text-left">Priorité</th>
-                                <th class="px-4 py-2 text-left">Catégorie</th>
-                                <th class="px-4 py-2 text-center">Fichiers</th>
-                                <th class="px-4 py-2 text-left">Agent</th>
-                                <th class="px-4 py-2 text-center">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($tickets as $ticket)
-                                <tr class="hover:bg-gray-50 transition">
-                                    <td class="px-4 py-2">{{ $ticket->title }}</td>
-                                    <td class="px-4 py-2">
-                                        @php
-                                            $statusBg = [
-                                                'ouvert' => 'bg-blue-100 text-blue-700',
-                                                'en_cours' => 'bg-yellow-100 text-yellow-700',
-                                                'resolu' => 'bg-green-100 text-green-700',
-                                                'ferme' => 'bg-red-100 text-red-700',
-                                            ];
-                                            $priorityBg = [
-                                                'basse' => 'bg-green-100 text-green-700',
-                                                'moyenne' => 'bg-yellow-100 text-yellow-700',
-                                                'haute' => 'bg-red-100 text-red-700',
-                                            ];
-                                        @endphp
-                                    
-                                        <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold {{ $statusBg[$ticket->status] ?? 'bg-gray-100 text-gray-700' }}">
-                                            {{ ucfirst($ticket->status) }}
-                                        </span>
-                                    </td>
+                            <tbody>
+                                @forelse($tickets as $ticket)
+                                    <tr>
+                                        <td>{{ Str::limit($ticket->title, 30) }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ match($ticket->status) {
+                                                'ouvert' => 'success',
+                                                'en_cours' => 'info',
+                                                'resolu' => 'primary',
+                                                'ferme' => 'secondary',
+                                                default => 'secondary'
+                                            } }}">
+                                                {{ ucfirst(str_replace('_', ' ', $ticket->status ?? 'Inconnu')) }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ match($ticket->priority) {
+                                                'basse' => 'secondary',
+                                                'moyenne' => 'warning',
+                                                'haute' => 'danger',
+                                                default => 'secondary'
+                                            } }}">
+                                                {{ ucfirst($ticket->priority ?? 'Inconnue') }}
+                                            </span>
+                                        </td>
+                                        <td>{{ ucfirst($ticket->category) }}</td>
+                                        <td class="text-center">
+                                            @if($ticket->attachments->count())
+                                                <i class="bi bi-paperclip text-primary"></i>
+                                            @else
+                                                <span class="text-muted">—</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($ticket->agent)
+                                                <span class="text-muted">{{ $ticket->agent->name }}</span>
+                                            @else
+                                                <span class="fst-italic text-secondary">Non assigné</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ route('client.tickets.show', $ticket->id) }}" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye me-1"></i> Voir
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4 text-danger fst-italic">Aucun ticket disponible</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mt-3">
+                        {{ $tickets->withQueryString()->links() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
                                     
                                     <td class="px-4 py-2">
                                         <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold {{ $priorityBg[$ticket->priority] ?? 'bg-gray-100 text-gray-700' }}">
@@ -118,40 +162,6 @@
                                             <span class="text-sm text-gray-700">{{ $ticket->agent->name }}</span>
                                         @else
                                             <span class="italic text-gray-400">Non assigné</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-2 text-center">
-                                        <a href="{{ route('client.tickets.show', $ticket->id) }}" class="text-indigo-600 hover:underline">Voir</a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-4 text-red-500 italic">Aucun ticket disponible</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="mt-4">
-                    {{ $tickets->withQueryString()->links() }}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Animations CSS -->
-    <style>
-        .animate-slide-down {
-            animation: slideDown 0.5s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { transform: translateY(-10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .animate-fade-in {
             animation: fadeIn 0.8s ease-out;
         }
 

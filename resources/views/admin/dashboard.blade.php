@@ -2,8 +2,8 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between align-items-center" data-aos="fade-up">
             <h2 class="h3 mb-0 text-primary">
-                <i class="bi bi-shield-lock me-2"></i> {{ __('Admin Dashboard') }}
-            </h2>
+    <i class="bi bi-shield-lock me-2"></i> Tableau de bord administrateur
+</h2>
         </div>
     </x-slot>
 
@@ -12,34 +12,34 @@
             <!-- Statistics -->
             <div class="row g-4 mb-4" data-aos="fade-up" data-aos-delay="100">
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card h-100 border-top border-top-4 border-primary">
+                    <div class="card h-100 bg-primary text-white">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Utilisateurs totaux</h3>
-                            <p class="h2 fw-bold text-primary mb-0">{{ $totalUsers }}</p>
+                            <h3 class="fw-bold mb-2 text-white">Utilisateurs totaux</h3>
+                            <p class="display-6 mb-0">{{ $totalUsers }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card h-100 border-top border-top-4 border-info">
+                    <div class="card h-100 bg-info text-white">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Tickets totaux</h3>
-                            <p class="h2 fw-bold text-info mb-0">{{ $totalTickets }}</p>
+                            <h3 class="fw-bold mb-2 text-white">Tickets totaux</h3>
+                            <p class="display-6 mb-0">{{ $totalTickets }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card h-100 border-top border-top-4 border-success">
+                    <div class="card h-100 bg-success text-white">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Agents actifs</h3>
-                            <p class="h2 fw-bold text-success mb-0">{{ $activeAgents }}</p>
+                            <h3 class="fw-bold mb-2 text-white">Agents actifs</h3>
+                            <p class="display-6 mb-0">{{ $activeAgents }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-3">
-                    <div class="card h-100 border-top border-top-4 border-warning">
+                    <div class="card h-100 bg-warning text-white">
                         <div class="card-body text-center">
-                            <h3 class="text-muted mb-2">Clients actifs</h3>
-                            <p class="h2 fw-bold text-warning mb-0">{{ $activeClients }}</p>
+                            <h3 class="fw-bold mb-2 text-white">Clients actifs</h3>
+                            <p class="display-6 mb-0">{{ $activeClients }}</p>
                         </div>
                     </div>
                 </div>
@@ -61,22 +61,22 @@
             <div class="card mb-4" data-aos="fade-up" data-aos-delay="300">
                 <div class="card-header bg-white">
                     <h3 class="h5 mb-0 text-primary">
-                        <i class="bi bi-people me-2"></i> Latest Users
-                    </h3>
+    <i class="bi bi-people me-2"></i> Derniers utilisateurs
+</h3>
                 </div>
                 <div class="card-body">
                     @if ($latestUsers->isEmpty())
-                        <p class="text-muted mb-0">No users yet.</p>
+                        <p class="text-muted mb-0">Aucun utilisateur pour le moment.</p>
                     @else
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Joined</th>
-                                        <th>Actions</th>
+                                        <th>Nom</th>
+<th>Email</th>
+<th>Rôle</th>
+<th>Inscrit le</th>
+<th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -92,7 +92,7 @@
                                             <td>{{ $user->created_at->format('d/m/Y') }}</td>
                                             <td>
                                                 <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-sm btn-outline-primary">
-                                                    View
+                                                    Voir
                                                 </a>
                                             </td>
                                         </tr>
@@ -104,25 +104,25 @@
                 </div>
             </div>
 
-            <!-- Latest Tickets -->
+            <!-- Derniers tickets -->
             <div class="card" data-aos="fade-up" data-aos-delay="400">
                 <div class="card-header bg-white">
                     <h3 class="h5 mb-0 text-primary">
-                        <i class="bi bi-ticket-detailed me-2"></i> Latest Tickets
-                    </h3>
+    <i class="bi bi-ticket-detailed me-2"></i> Derniers tickets
+</h3>
                 </div>
                 <div class="card-body">
                     @if ($latestTickets->isEmpty())
-                        <p class="text-muted mb-0">No tickets yet.</p>
+                        <p class="text-muted mb-0">Aucun ticket pour le moment.</p>
                     @else
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Title</th>
+                                        <th>Titre</th>
                                         <th>Client</th>
                                         <th>Agent</th>
-                                        <th>Status</th>
+                                        <th>Statut</th>
                                         <th>Date</th>
                                         <th>Actions</th>
                                     </tr>
