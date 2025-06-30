@@ -16,8 +16,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="mb-5">
-                                    <h2 class="h3">Registration</h2>
-                                    <h3 class="fs-6 fw-normal text-secondary m-0">Enter your details to register</h3>
+                                    <h2 class="h3">Inscription</h2>
+<h3 class="fs-6 fw-normal text-secondary m-0">Entrez vos informations pour créer un compte</h3>
                                 </div>
                             </div>
                         </div>
@@ -31,41 +31,41 @@
                             @csrf
                             <div class="row gy-3 gy-md-4 overflow-hidden">
                                 <div class="col-12">
-                                    <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Full Name" value="{{ old('name') }}" required autofocus autocomplete="name">
+                                    <label for="name" class="form-label">Nom complet <span class="text-danger">*</span></label>
+<input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" placeholder="Nom complet" value="{{ old('name') }}" required autofocus autocomplete="name">
                                     @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-12">
-                                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email" placeholder="name@example.com" value="{{ old('email') }}" required autocomplete="username">
+                                    <label for="email" class="form-label">Adresse e-mail <span class="text-danger">*</span></label>
+<input type="email" class="form-control @error('email') is-invalid @enderror" name="email" id="email" placeholder="nom@exemple.com" value="{{ old('email') }}" required autocomplete="username">
                                     @error('email')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-12">
-                                    <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" required autocomplete="new-password">
+                                    <label for="password" class="form-label">Mot de passe <span class="text-danger">*</span></label>
+<input type="password" class="form-control @error('password') is-invalid @enderror" name="password" id="password" required autocomplete="new-password">
                                     @error('password')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-12">
-                                    <label for="password_confirmation" class="form-label">Confirm Password <span class="text-danger">*</span></label>
-                                    <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required autocomplete="new-password">
+                                    <label for="password_confirmation" class="form-label">Confirmer le mot de passe <span class="text-danger">*</span></label>
+<input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required autocomplete="new-password">
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="1" name="iAgree" id="iAgree" required>
                                         <label class="form-check-label text-secondary" for="iAgree">
-                                            I agree to the <a href="#" class="link-primary text-decoration-none">terms and conditions</a>
-                                        </label>
+    J'accepte les <a href="#" class="link-primary text-decoration-none">conditions générales d'utilisation</a>
+</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="d-grid">
-                                        <button class="btn bsb-btn-xl btn-primary" type="submit">Sign up</button>
+                                        <button class="btn bsb-btn-xl btn-primary" type="submit">S'inscrire</button>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <hr class="mt-5 mb-4 border-secondary-subtle">
-                                <p class="m-0 text-secondary text-end">Already have an account? <a href="{{ route('login') }}" class="link-primary text-decoration-none">Sign in</a></p>
+                                <p class="m-0 text-secondary text-end">Déjà un compte ? <a href="{{ route('login') }}" class="link-primary text-decoration-none">Se connecter</a></p>
                             </div>
                         </div>
                         

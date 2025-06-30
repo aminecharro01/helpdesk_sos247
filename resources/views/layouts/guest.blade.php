@@ -48,10 +48,10 @@
             <nav id="navbar" class="navbar">
                 <ul class="d-flex gap-2 mb-0">
                     <li><a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'active' : '' }}">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Connexion
                     </a></li>
                     <li><a href="{{ route('register') }}" class="{{ request()->routeIs('register') ? 'active' : '' }}">
-                        <i class="bi bi-person-plus me-2"></i>Register
+                        <i class="bi bi-person-plus me-2"></i>S'inscrire
                     </a></li>
                 </ul>
             </nav>

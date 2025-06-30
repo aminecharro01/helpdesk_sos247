@@ -197,41 +197,28 @@ class SupervisorController extends Controller
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function exportTicketsCsv()
-    {
-        $tickets = Ticket::with(['client', 'agent'])->get();
+{
+    $tickets = Ticket::with(['client', 'agent'])->get();
 
-        $fileName = 'tickets-' . now()->format('Y-m-d') . '.csv';
+    $fileName = 'tickets-' . now()->format('Y-m-d_H-i') . '.xls';
+    $headers = [
+        'Content-Type'        => 'application/vnd.ms-excel; charset=UTF-8',
+        'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        'Pragma'              => 'no-cache',
+        'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
+        'Expires'             => '0',
+    ];
 
-        $headers = [
-            'Content-type'        => 'text/csv',
-            'Content-Disposition' => "attachment; filename=$fileName",
-            'Pragma'              => 'no-cache',
-            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires'             => '0'
-        ];
+    $html = view('supervisor.tickets.csv_export', compact('tickets'))->render();
+    $callback = function () use ($html) {
+        echo chr(0xEF) . chr(0xBB) . chr(0xBF); // BOM UTF-8 pour Excel
+        echo $html;
+    };
 
-        $columns = ['ID', 'Titre', 'Client', 'Agent Assigné', 'Priorité', 'Statut', 'Créé le', 'Mis à jour le'];
+    return response()->stream($callback, 200, $headers);
+}
 
-        $callback = function() use($tickets, $columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
 
-            foreach ($tickets as $ticket) {
-                $row['ID']                = $ticket->id;
-                $row['Titre']             = $ticket->title;
-                $row['Client']            = $ticket->client->name;
-                $row['Agent Assigné']     = $ticket->agent ? $ticket->agent->name : 'Non assigné';
-                $row['Priorité']          = ucfirst($ticket->priority);
-                $row['Statut']            = ucfirst($ticket->status);
-                $row['Créé le']           = $ticket->created_at->format('d/m/Y H:i');
-                $row['Mis à jour le']     = $ticket->updated_at->format('d/m/Y H:i');
+    
 
-                fputcsv($file, [$row['ID'], $row['Titre'], $row['Client'], $row['Agent Assigné'], $row['Priorité'], $row['Statut'], $row['Créé le'], $row['Mis à jour le']]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
-    }
 }

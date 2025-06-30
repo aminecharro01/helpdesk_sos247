@@ -61,7 +61,7 @@
                                 @endphp
                                 <a href="{{ $dashboardRoute }}" class="btn btn-primary">Tableau de bord</a>
                             @else
-                                <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">Connexion</a>
+                                <a href="{{ route('login') }}" class="btn btn-success me-2">Connexion</a>
                                 @if (Route::has('register'))
                                     <a href="{{ route('register') }}" class="btn btn-primary">S'inscrire</a>
                                 @endif
