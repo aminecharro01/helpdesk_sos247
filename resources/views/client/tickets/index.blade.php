@@ -142,26 +142,9 @@
             </div>
         </div>
     </div>
-</x-app-layout>
                                     
-                                    <td class="px-4 py-2">
-                                        <span class="inline-block px-2 py-1 rounded-full text-xs font-semibold {{ $priorityBg[$ticket->priority] ?? 'bg-gray-100 text-gray-700' }}">
-                                            {{ ucfirst($ticket->priority) }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-2">{{ ucfirst($ticket->category) }}</td>
-                                    <td class="px-4 py-2 text-center">
-                                        @if($ticket->attachments->count())
-                                        ✅
-                                        @else
-                                        —
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-2">
-                                        @if($ticket->agent)
-                                            <span class="text-sm text-gray-700">{{ $ticket->agent->name }}</span>
-                                        @else
-                                            <span class="italic text-gray-400">Non assigné</span>
+    <style>
+        .fade-in {
             animation: fadeIn 0.8s ease-out;
         }
 
@@ -171,7 +154,7 @@
         }
     </style>
 
-    <!-- JS pour auto-disparition -->
+    <!-- JS pour auto-disparition des messages -->
     <script>
         window.onload = function() {
             setTimeout(function() {
