@@ -35,8 +35,8 @@
                                     <textarea name="description" id="description" rows="4" class="form-control" required></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="attachments" class="form-label">Pièces jointes</label>
-                                    <input type="file" name="attachments[]" id="attachments" class="form-control" multiple>
+                                    <label for="attachments" class="form-label">Pièces jointes (.png,.jpeg,.jpg)</label>
+                                    <input type="file" name="attachments[]" id="attachments" class="form-control" multiple accept=".png,.jpeg,.jpg" >
                                 </div>
                                 <div class="d-grid pt-2">
                                     <button type="submit" class="btn btn-primary btn-lg">

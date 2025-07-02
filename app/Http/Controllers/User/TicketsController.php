@@ -19,7 +19,7 @@ class TicketsController extends Controller
             ->when($request->priority, fn($q) => $q->where('priority', $request->priority))
             ->when($request->category, fn($q) => $q->where('category', $request->category))
             ->latest()
-            ->paginate(10);
+            ->paginate(15);
 
         $categories = Ticket::where('user_id', Auth::id())->distinct()->pluck('category');
 
@@ -37,7 +37,7 @@ class TicketsController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'attachments' => 'nullable|array',
-            'attachments.*' => 'nullable|file|max:2048',
+            'attachments.*' => 'nullable|file|mimes:png,jpeg,jpg|max:2048',
         ]);
 
         $ticket = Ticket::create([
@@ -45,6 +45,7 @@ class TicketsController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'status' => 'ouvert',
+            'due_date' => now()->addDays(3),
         ]);
 
         if ($request->hasFile('attachments')) {

@@ -80,9 +80,19 @@
                     <ul class="list-unstyled">
                         @forelse($ticket->attachments as $attachment)
                             <li>
-                                <a href="{{ Storage::url($attachment->file_path) }}" class="text-primary text-decoration-none" download>
-                                    <i class="bi bi-paperclip me-1"></i>{{ basename($attachment->file_path) }}
-                                </a>
+                                @php
+    $ext = strtolower(pathinfo($attachment->file_path, PATHINFO_EXTENSION));
+@endphp
+@if (in_array($ext, ['png', 'jpg', 'jpeg']))
+    <a href="{{ Storage::url($attachment->file_path) }}" target="_blank">
+        <img src="{{ Storage::url($attachment->file_path) }}" alt="{{ basename($attachment->file_path) }}" style="max-height: 100px; max-width: 120px; margin-right: 10px; border-radius: 4px; border: 1px solid #ddd;">
+        {{ basename($attachment->file_path) }}
+    </a>
+@else
+    <a href="{{ Storage::url($attachment->file_path) }}" class="text-primary text-decoration-none" download>
+        <i class="bi bi-paperclip me-1"></i>{{ basename($attachment->file_path) }}
+    </a>
+@endif                                </a>
                             </li>
                         @empty
                             <li class="text-muted">Aucune pièce jointe.</li>

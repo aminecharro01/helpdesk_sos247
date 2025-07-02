@@ -38,8 +38,8 @@
                         <div class="container-fluid">
                             <a class="navbar-brand d-flex align-items-center" href="{{ route(auth()->user()->role . '.dashboard') }}">
                                 <img src="{{ asset('assets/img/logo.webp') }}" alt="Logo" class="me-2" height="32">
-                                <span class="fw-bold text-primary">{{ config('app.name', 'SOS247') }}</span>
-                            </a>
+                                <span class="fw-bold text-primary">SOS247</span>
+                                </a>
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon"></span>
                             </button>

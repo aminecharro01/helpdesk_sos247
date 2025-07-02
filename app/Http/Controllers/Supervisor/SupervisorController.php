@@ -123,7 +123,7 @@ class SupervisorController extends Controller
             $query->whereDate('created_at', '<=', $request->created_to);
         }
 
-        $tickets = $query->latest()->paginate(10)->appends($request->all());
+        $tickets = $query->latest()->paginate(15)->appends($request->all());
         $agents = User::where('role', 'agent')->get();
         return view('supervisor.tickets.index', compact('tickets', 'agents'));
     }
@@ -187,6 +187,10 @@ class SupervisorController extends Controller
 
         $ticket->agent_id = $agent->id;
         $ticket->save();
+
+        // Notifier l'agent de l'assignation
+        $supervisor = auth()->user();
+        $agent->notify(new \App\Notifications\TicketAssignedToAgent($ticket, $supervisor));
 
         return back()->with('success', 'Ticket assigné avec succès à ' . $agent->name);
     }

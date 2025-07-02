@@ -25,7 +25,7 @@
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/auth.css') }}" rel="stylesheet">
 
-    <!-- Laravel Vite Assets -->
+    <!-- SOS247 Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Guest Layout Custom CSS -->
@@ -42,7 +42,7 @@
 
             <a href="{{ route('login') }}" class="logo d-flex align-items-center me-auto me-xl-0">
                 <img src="{{ asset('assets/img/logo.png') }}" alt="SOS247 Logo" height="40">
-                <h1>{{ config('app.name', 'SOS247') }}<span>.</span></h1>
+                <h1>{{ config('app.name', 'SOS247') }}</h1>
             </a>
 
             <nav id="navbar" class="navbar">

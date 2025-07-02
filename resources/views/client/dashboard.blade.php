@@ -43,9 +43,36 @@
                                 @endforeach
                             </ul>
 
-                            <div class="mt-4 d-flex justify-content-center">
-                                {{ $notifications->links() }}
-                            </div>
+                            <div class="mt-4">
+    @if ($notifications->hasPages())
+        <nav aria-label="Pagination notifications" class="d-flex justify-content-center">
+            <ul class="pagination pagination-sm mb-0">
+                {{-- Previous Page Link --}}
+                @if ($notifications->onFirstPage())
+                    <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                @else
+                    <li class="page-item"><a class="page-link" href="{{ $notifications->previousPageUrl() }}" rel="prev">&laquo;</a></li>
+                @endif
+                
+                {{-- Pagination Elements --}}
+                @foreach ($notifications->links()->elements[0] as $page => $url)
+                    @if ($page == $notifications->currentPage())
+                        <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                    @else
+                        <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                    @endif
+                @endforeach
+
+                {{-- Next Page Link --}}
+                @if ($notifications->hasMorePages())
+                    <li class="page-item"><a class="page-link" href="{{ $notifications->nextPageUrl() }}" rel="next">&raquo;</a></li>
+                @else
+                    <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                @endif
+            </ul>
+        </nav>
+    @endif
+</div>
                         @endif
                     </div>
                 </div>

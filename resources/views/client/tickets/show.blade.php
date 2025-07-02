@@ -71,7 +71,17 @@
                                         @foreach ($ticket->attachments as $attachment)
                                             <li class="list-group-item d-flex align-items-center">
                                                 <i class="bi bi-paperclip me-2"></i>
-                                                <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank">{{ $attachment->filename }}</a>
+                                                @php
+    $ext = strtolower(pathinfo($attachment->file_path, PATHINFO_EXTENSION));
+@endphp
+@if (in_array($ext, ['png', 'jpg', 'jpeg']))
+    <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank">
+        <img src="{{ asset('storage/' . $attachment->file_path) }}" alt="{{ $attachment->filename }}" style="max-height: 100px; max-width: 120px; margin-right: 10px; border-radius: 4px; border: 1px solid #ddd;">
+        {{ $attachment->filename }}
+    </a>
+@else
+    <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank">{{ $attachment->filename }}</a>
+@endif
                                             </li>
                                         @endforeach
                                     </ul>

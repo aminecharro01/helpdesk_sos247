@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>{{ config('app.name', 'Laravel') }} - Système d'Assistance</title>
+    <title>{{ config('app.name', 'SOS247') }} - Système d'Assistance</title>
     <meta name="description" content="Système de tickets d'assistance professionnel pour un support client efficace">
     <meta name="keywords" content="assistance, tickets, support, service client">
 
@@ -335,7 +335,7 @@
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6 footer-about">
                     <a href="{{ route('welcome') }}" class="logo d-flex align-items-center">
-                        <span class="sitename">{{ config('app.name', 'Laravel') }}</span>
+                        <span class="sitename">{{ config('app.name', 'SOS247') }}</span>
                     </a>
                     <div class="footer-contact pt-3">
                         <p>Système d'Assistance Professionnel</p>
@@ -379,7 +379,7 @@
         </div>
 
         <div class="container copyright text-center mt-4">
-            <p>&copy; {{ date('Y') }} <strong class="px-1">{{ config('app.name', 'Laravel') }}</strong>. Tous droits réservés</p>
+            <p>&copy; {{ date('Y') }} <strong class="px-1">{{ config('app.name', 'SOS247') }}</strong>. Tous droits réservés</p>
         </div>
     </footer>
 

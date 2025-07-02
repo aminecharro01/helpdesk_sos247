@@ -121,7 +121,7 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ route('client.tickets.show', $ticket->id) }}" class="btn btn-sm btn-outline-primary">
+                                            <a href="{{ route('client.tickets.show', $ticket->id) }}" class="btn btn-sm btn-primary">
                                                 <i class="bi bi-eye me-1"></i> Voir
                                             </a>
                                         </td>
@@ -136,7 +136,7 @@
                     </div>
 
                     <div class="mt-3">
-                        {{ $tickets->withQueryString()->links() }}
+                        {{ $tickets->withQueryString()->links('vendor.pagination.bootstrap-5') }}
                     </div>
                 </div>
             </div>

@@ -34,7 +34,7 @@ class AgentController extends Controller
             $query->where('priority', $request->priority);
         })
         ->orderByDesc('created_at')
-        ->paginate(10);
+        ->paginate(15);
 
     // Notifications non lues pour l'utilisateur connecté
     /** @var \App\Models\User $authUser */

@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <!-- Carte Tickets fermés -->
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg-12">
                     <div class="card h-100 bg-danger text-white">
                         <div class="card-body text-center">
                             <h3 class="fw-bold mb-2 text-white">Fermés</h3>
@@ -53,6 +53,34 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Notifications -->
+            @if(isset($notifications) && $notifications->count())
+                <div class="card mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-header bg-white">
+                        <h3 class="h5 mb-0 text-primary">
+                            <i class="bi bi-bell-fill me-2"></i> Notifications récentes
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            @foreach($notifications as $notification)
+                                <li class="list-group-item">
+                                    {{ $notification->data['message'] ?? 'Nouvelle notification' }}
+                                    <span class="text-muted small float-end">{{ $notification->created_at->diffForHumans() }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <div class="mt-2">
+                            {{ $notifications->links('vendor.pagination.bootstrap-5') }}
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="alert alert-info" data-aos="fade-up" data-aos-delay="200">
+                    <i class="bi bi-bell me-2"></i> Aucune notification non lue.
+                </div>
+            @endif
 
             <!-- Status Chart -->
             <div class="card mb-4" data-aos="fade-up" data-aos-delay="200">
