@@ -1,100 +1,101 @@
-# Helpdesk SOS247 — Système de gestion de tickets
+# Helpdesk SOS247
 
-Ce projet est une application web de gestion de tickets d’assistance (Helpdesk) développée avec Laravel. Elle permet aux clients de soumettre des tickets, aux agents de les traiter, aux superviseurs de superviser l’activité, et aux administrateurs de gérer l’ensemble du système.
+A multi-role IT helpdesk / ticketing system built with Laravel. Clients submit support tickets, agents work them, supervisors monitor team activity, and admins manage the whole system — with real-time notifications and role-specific dashboards.
 
-## Fonctionnalités principales
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
 
-- **Gestion multi-rôles** : Administrateur, Superviseur, Agent, Client
-- **Création et suivi de tickets** (statut, priorité, catégorie, pièces jointes)
-- **Commentaires sur les tickets**
-- **Notifications** pour les mises à jour importantes
-- **Statistiques et tableaux de bord** adaptés à chaque rôle
-- **Filtres et recherche avancée**
-- **Interface moderne et responsive** (Bootstrap 5)
-- **Sécurité** : authentification, autorisations, CSRF, etc.
+## Key Features
 
-## Technologies utilisées
-- Laravel 10+
-- Bootstrap 5.3
-- Chart.js (statistiques)
-- MySQL/MariaDB
-- PHP 8+
+- **Multi-role access** — Admin, Supervisor, Agent, and Client roles (via `spatie/laravel-permission`)
+- **Ticket lifecycle** — creation, status/priority/category tracking, attachments, and comments
+- **Real-time notifications** — powered by Laravel Reverb (WebSockets) + Laravel Echo/Pusher client
+- **Role-specific dashboards** — stats and charts (Chart.js) tailored to each role
+- **PDF export** — ticket/report generation via `barryvdh/laravel-dompdf`
+- **Excel import/export** — via `maatwebsite/excel`
+- **Search & filtering** — advanced ticket search across status/priority/category
+- **Responsive UI** — Bootstrap 5 + Alpine.js
 
-## Installation
+## Project Structure
 
-1. **Cloner le dépôt**
-
-```bash
-git clone https://github.com/aminecharro01/helpdesk_sos247.git
-cd helpdesk_sos247
+```
+helpdesk_sos247/
+├── app/
+│   ├── Http/
+│   │   └── Controllers/
+│   │       ├── Admin/          # System administration
+│   │       ├── Supervisor/     # Team oversight
+│   │       ├── Agent/          # Ticket handling
+│   │       ├── User/           # Client-facing ticket flows
+│   │       └── Auth/
+│   ├── Models/
+│   ├── Events/                 # Broadcast events (Reverb)
+│   ├── Notifications/
+│   └── Console/Commands/
+├── routes/
+│   ├── web.php
+│   ├── auth.php
+│   └── console.php
+├── resources/                  # Blade views, JS, CSS
+├── database/                   # Migrations, seeders, factories
+├── config/
+├── tests/
+└── .env.example
 ```
 
-2. **Installer les dépendances**
+## Getting Started
 
-```bash
-composer install
-npm install && npm run build
-```
+### Prerequisites
 
-3. **Configurer l’environnement**
+- PHP 8.2+, Composer
+- Node.js 18+ and npm
+- MySQL/MariaDB (or SQLite for local dev)
 
-Copiez `.env.example` en `.env` puis configurez la connexion à la base de données et autres variables :
+### Environment Variables
 
 ```bash
 cp .env.example .env
-```
-
-Générez la clé d’application :
-
-```bash
 php artisan key:generate
 ```
 
-4. **Migrer la base de données et ajouter les données de base**
+Then set your database connection (`DB_CONNECTION`, `DB_DATABASE`, ...) and, if using real-time notifications, the `REVERB_*` broadcasting credentials in `.env`.
+
+### Installation
+
+```bash
+composer install
+npm install
+```
+
+### Database
 
 ```bash
 php artisan migrate --seed
 ```
 
-5. **Démarrer le serveur local**
+### Local Development
+
+Run each in its own terminal:
 
 ```bash
-php artisan serve
+php artisan serve            # backend at http://localhost:8000
+npm run dev                  # Vite dev server (assets)
+php artisan queue:listen     # background jobs
+php artisan reverb:start     # if using real-time notifications
 ```
 
-6. **Accéder à l’application**
+### Build (production assets)
 
-Ouvrez [http://localhost:8000](http://localhost:8000) dans votre navigateur.
+```bash
+npm run build
+```
 
-## Utilisation
+## Testing
 
-- **Client** : crée des tickets, suit leur avancement, ajoute des commentaires.
-- **Agent** : gère les tickets assignés, répond aux clients, met à jour les statuts.
-- **Superviseur** : supervise l’activité, consulte les statistiques, réattribue les tickets si besoin.
-- **Administrateur** : gère les utilisateurs, les catégories, supervise tout le système.
+```bash
+php artisan test
+```
 
-## Structure du projet
-
-- `app/Http/Controllers` : logique métier et gestion des rôles
-- `resources/views` : interfaces Blade (Bootstrap)
-- `routes/web.php` : routes principales de l’application
-- `public/` : fichiers accessibles publiquement (assets, uploads)
-
-## Contribution
-
-Toute contribution est la bienvenue ! Merci de créer une issue ou une pull request sur le dépôt GitHub.
-
-## Licence
-
-Ce projet est sous licence MIT.
-
----
-
-Pour toute question ou suggestion, contactez l’auteur du dépôt.
-
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Uses PHPUnit with Faker-generated fixtures (`fakerphp/faker`) and Mockery for mocking.
