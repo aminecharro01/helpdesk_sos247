@@ -1,3 +1,5 @@
+![Helpdesk SOS247 preview](docs/mockup.jpg)
+
 # Helpdesk SOS247
 
 A multi-role IT helpdesk / ticketing system built with Laravel. Clients submit support tickets, agents work them, supervisors monitor team activity, and admins manage the whole system — with real-time notifications and role-specific dashboards.
