@@ -2,6 +2,8 @@
 
 # Helpdesk SOS247
 
+🔗 Portfolio: https://www.aminecharro.me
+
 A multi-role IT helpdesk / ticketing system built with Laravel. Clients submit support tickets, agents work them, supervisors monitor team activity, and admins manage the whole system — with real-time notifications and role-specific dashboards.
 
 ![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
